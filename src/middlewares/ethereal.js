@@ -1,4 +1,4 @@
-const envConfig = require('../../env.config');
+const envConfig = require('../config/env.config');
 const nodemailer  = require('nodemailer');
 
 const TEST_MAIL = envConfig.TEST_MAIL;

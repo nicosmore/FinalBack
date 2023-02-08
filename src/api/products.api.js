@@ -22,7 +22,14 @@ class ProductsApi {
         return await productsDao.getById(id);
     }
 
-    async creteProduct (productPayload) {
+    async getProductByCategory(category){
+        if (!category) {
+            throw new HttpError(HTTP_STATUS.BAD_REQUEST, 'The category param is required');
+        }
+        return await productsDao.getByCategory(category);
+    }
+
+    async createProduct (productPayload) {
         await ProductsSchema.validate(productPayload);
         const productDTO = new ProductDTO(productPayload)
         return await productsDao.save(productDTO);

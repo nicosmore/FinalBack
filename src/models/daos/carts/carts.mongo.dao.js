@@ -13,7 +13,7 @@ const collection = 'carts';
         super(collection, cartSchema);
     }
 
-    async getCartProds (cartId){        
+    async listCartProds (cartId){        
         const cart = await this.getById(cartId);
         const productos = await this.dataListProdsInCart(cart.products)        
         return [...productos]
@@ -34,13 +34,7 @@ const collection = 'carts';
                 }
             cartProds.push(newProd);     
             console.log(newProd);              
-        }
-      /*   cartProduct.forEach(async dataProds => {
-            let prod =  await productsMongoDAO.getById(dataProds.productId);
-            let newProd = {qty: dataProds.qty, ...prod}
-            cartProds.push(newProd);                         
-        }) */         
-                 
+        }        
         return cartProds;
     }
 

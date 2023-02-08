@@ -2,10 +2,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const sendMail = require('./ethereal');
-const UserDTO = require('../models/dtos/user.dto');
-const UsersDao = require('../models/daos/users/users.mongo.dao');
+const UsersApi = require('../api/users.api');
 
-const User = new UsersDao();
+const apiUser = new UsersApi();
 
 const salt = () => bcrypt.genSaltSync(10);
 const createHash = (password) => bcrypt.hashSync(password, salt());
@@ -20,14 +19,14 @@ passport.use('signup', new LocalStrategy({
   try {
     const userItem = {
       name: req.body.name, 
-      address: req.body.address,
-      age: req.body.age,  
+      lastname: req.body.lastname,
+      phone: req.body.phone,             
       email: username,
-      password: createHash(password)
+      password: createHash(password),
+      confirm_password:createHash(confirm_password),
     };
-
-    const newUser = new UserDTO(userItem);
-    const user = await User.createUser(newUser);
+    
+    const user = await apiUser.createUser(userItem);
     console.log("User registration successfull");
     sendMail.sendmail(user.name);
     
@@ -44,7 +43,7 @@ passport.use('signup', new LocalStrategy({
 // sign in
 passport.use('signin', new LocalStrategy( async (username, password, done) => {
   try {
-    const user = await User.getByEmail(username);
+    const user = await apiUser.getByEmail(username);
     if (!isValidPassword(user, password)) {
       console.log("Invalid user or password");
       return done(null, false);
@@ -65,8 +64,8 @@ passport.serializeUser((user, done) => {
 
 // Deserialization
 passport.deserializeUser(async (id, done) => {
-  console.log("Inside DEserializer");
-  const user = await User.getById(id);
+  console.log("Inside Deserializer");
+  const user = await apiUser.getById(id);
   done(null, user);
 });
 

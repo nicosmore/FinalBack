@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dbConfig = require('../../config/db.config');
-const envConfig = require('../../../env.config');
+const envConfig = require('../../config/env.config');
 const { HttpError, HTTP_STATUS } = require('../../utils/api.utils');
 
 class MongoContainer {
@@ -23,10 +23,10 @@ class MongoContainer {
   }
 
   async getById(id) {
-    const document = await this.model.findOne({ _id: id }, { __v: 0 });
+    const document = await this.model.findById(id, { __v: 0 }).lean();
     if (!document) {
-      const message = `Resource with id ${id} does not exist in our records`;
-      throw new HttpError(HTTP_STATUS.NOT_FOUND, message);
+      const errorMessage = `Resource with id ${id} does not exist in our records`;
+      throw new HttpError(HTTP_STATUS.NOT_FOUND, errorMessage);
     }
     return document;
   }
@@ -42,8 +42,8 @@ class MongoContainer {
       { $set: { ...item } }
     );
     if (!updatedDocument.matchedCount) {
-      const message = `Resource with id ${id} does not exist in our records`;
-      throw new HttpError(HTTP_STATUS.NOT_FOUND, message);
+      const errorMessage = `Resource with id ${id} does not exist in our records`;
+      throw new HttpError(HTTP_STATUS.NOT_FOUND, errorMessage);
     }
     return updatedDocument;
   }
@@ -51,8 +51,8 @@ class MongoContainer {
   async delete(id) {
     const deleteForId = await this.model.deleteOne({ _id: id });
     if(!deleteForId.deletedCount) {
-      const message = `Resource with id ${id} does not exist in our records`;
-      throw new HttpError(HTTP_STATUS.NOT_FOUND, message);
+      const errorMessage = `Resource with id ${id} does not exist in our records`;
+      throw new HttpError(HTTP_STATUS.NOT_FOUND, errorMessage);
     }
     return deleteForId
   }

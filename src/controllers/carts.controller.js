@@ -1,13 +1,13 @@
-const { CartsDao } = require('../models/daos/daos.factory');
+const CartsApi = require("../api/products.api");
 const { successResponse, HTTP_STATUS } = require("../utils/api.utils");
 
-const cartsDao = new CartsDao();
+const cartsApi = new CartsApi();
 
 class CartsControllers {
 
   createCart = async (req, res, next) => {
     try{
-      const newCart = await cartsDao.saveCart(); 
+      const newCart = await cartsApi.createCart(); 
       const response = successResponse(newCart);
       res.status(HTTP_STATUS.CREATED).json(response);
     }
@@ -19,7 +19,7 @@ class CartsControllers {
   deleteCart = async (req, res, next) => {
     const { Id } =  req.params;
     try{
-      const delCart = await cartsDao.delete(Id);
+      const delCart = await cartsApi.delete(Id);
       const response = successResponse(delCart);
       res.status(HTTP_STATUS.CREATED).json(response);
     }
@@ -31,7 +31,7 @@ class CartsControllers {
   listCartProds = async (req, res,next) => { 
   const { Id } =  req.params;
     try {
-      const products = await cartsDao.getCartProds(Id)
+      const products = await cartsApi.listCartProds(Id)
       const response = successResponse(products)
       res.status(HTTP_STATUS.OK).json(response)
     }
@@ -43,7 +43,7 @@ class CartsControllers {
   addProds = async (req, res, next) => {
     const { IdCar, IdProd } =  req.params;    
     try {
-      const products = await cartsDao.addProductToCart(IdCar, IdProd)
+      const products = await cartsApi.addProds(IdCar, IdProd)
       const response = successResponse(products)
       res.status(HTTP_STATUS.OK).json(response)
     }
@@ -55,7 +55,7 @@ class CartsControllers {
   deleteProductCart = async (req , res, next) => {
     const { IdCar,IdProd } =  req.params;
     try {
-      const products = await cartsDao.removeProductFromCart(IdCar, IdProd)
+      const products = await cartsApi.deleteProductCart(IdCar, IdProd)
       const response = successResponse(products)
       res.status(HTTP_STATUS.OK).json(response)
     }

@@ -1,11 +1,11 @@
-const envConfig = require('../../../env.config'); 
+const envConfig = require('../../config/env.config'); 
 
 let ProductsDao;
 let CartsDao;
 let UsersDao;
 
-console.log(envConfig.DATA_SOURCE);
-switch(envConfig.DATA_SOURCE) {  
+console.log(envConfig.DATASOURCE);
+switch(envConfig.DATASOURCE) {  
   case 'mongo':
     ProductsDao = require('./products/products.mongo.dao');
     CartsDao = require('./carts/carts.mongo.dao'); 

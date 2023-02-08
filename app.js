@@ -1,5 +1,5 @@
 const express = require("express");
-const config = require("./env.config");
+const config = require("./src/config/env.config");
 const cors = require('cors');
 const apiRoutes = require("./src/routers/app.routers");
 const errorMiddleware = require("./src/middlewares/error.middleware");

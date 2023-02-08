@@ -1,20 +1,22 @@
-const { Schema } = require('mongoose');
+const yup = require('yup');
 
-const userSchema = new Schema({
-    name: {type: String, required: true},    
-    address: {type: String, required: true},
-    age: {type: Number, required: true},
-    /* image: { type: String, required: true}, */
-    email: {type: String,
-      required: true,
-      unique: true,
-      match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g, "Invalid email"]
-  },   
-  password: {type: String, required: true},  
-  createdAt: {type: Date, required: true },
-  updatedAt: {type: Date, required: true },
-  cart: [{ type: Schema.Types.ObjectId, ref: "carts", required: true }]
-    
-});
+class UserSchema{
+  static #schema = yup.object({
+    name: yup.string().required(),
+    lastname: yup.string().required(),
+    phone: yup.number().required(),    
+    email: yup.string().email(),
+    password: yup.string().required(),
+    confirm_password: yup.string().oneOf([Yup.ref('password'), null]).required()
+  })
 
-module.exports = userSchema;
+  constructor(user) {
+    Object.assign(this, user);
+  }
+
+  static async validate(userValidate){
+    return await UserSchema.#schema.validate(userValidate);
+  }
+}
+
+module.exports = UserSchema;
